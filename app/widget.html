@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Bootstrap Example</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.1/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="css/jquery.css">
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"></script>
+    <script src="https://live.zwidgets.com/js-sdk/1.1/ZohoEmbededAppSDK.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.1/dist/js/bootstrap.bundle.min.js"></script>
+     <script src="lib/jquery.js"></script>
+    <style>
+        .container {
+            padding: 2rem 0rem;
+        }
+
+        .modal-header .close {
+
+            margin-top: -1.5rem;
+        }
+        .form-title {
+            margin: -2rem 0rem 2rem;
+        }
+
+        .btn-round {
+            border-radius: 3rem;
+        }
+
+        .delimiter {
+            padding: 1rem;  
+        }
+        .signup-section {
+            padding: 0.3rem 0rem;
+        }
+        #loginModal {
+            background-color: #fff;
+        }
+        .modal-dialog-centered {
+          min-height: calc(60% - 8.5rem);
+        }
+       
+        .ja_close {
+          position: absolute;
+          top: 3px;
+          right: 5px;
+          background: #449454;
+          color: #449454;
+          padding: 0px 7px 0 7px;
+          cursor: pointer;
+          font-weight: bold;
+          z-index: 99999;
+          border-radius: 18px;
+          color: #fff;
+        }
+    .modal-content {
+        border: 2px solid #449454;
+      }
+    .green {
+      color: #449454;
+    }
+    .closejAlert.ja_close {
+        background-color: red;
+    }
+    .red {
+        color: red;
+    }
+    .ja_red {
+        border-color: red;
+    }
+    #send_cancel_btn {
+      padding-right: 19px;
+      margin-left: 42px;
+      width: 20%;
+    }
+    #phonesms_send{
+    width: 20%;
+    }
+    .ja_body {
+    padding: 24px 7px;
+    font-size: 14px;
+}
+    </style>
+
+</head>
+<body>
+    <div class="modal fade" id="loginModal" tabindex="-1" role="dialog" data-backdrop="false" data-keyboard="false">
+        <div class=" modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-body">
+                    <div class="d-flex flex-column text-center">
+                        <form action='' method='post' >
+                            <div class="form-group px-2" id="mydiv">
+                            <!-- <h6  style="color: red" class="fileds text-left">All fields are Required*</h6> --> 
+                            <div class="form-group px-2">
+                                <input type="text" class="form-control" id="lead_name"placeholder="Lead Name..." required >
+                            </div>
+                            <div class="form-group  px-2 " id="phone-messge">
+                                <select class="form-control select2bs4" name="leader_owner" id="leader_owner_phoneno" style="width: 100%" required>
+                                    <option value="972-487-7653"> 972-487-7653</option>
+                                </select>
+                            </div>
+
+                            <div class="form-group px-2 py-2" id="phone-second">
+                                <select class="form-control select2bs4" name="phone_number" id="phone_number_customer"  style="width: 100% " required>
+                                </select>
+                            </div>
+                            <div class="form-group px-2" id="text-messge">
+                                <textarea class="form-control" id="form_detail" name="message" placeholder="Message"  rows="6" required></textarea>
+                            </div>
+                            <div class="button-function">
+                                <button type="button" id="phonesms_send" class="btn px-3  savebutton btn-round btn btn-success">Send</button>
+                                <button type="button" id="send_cancel_btn" class="btn px-3 cancelbutton btn btn-danger btn-round ">Cancel</button>
+                            </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script type="text/javascript">  
+
+        $(document).ready(function() { 
+            $('#loginModal').modal('show');
+            $(function () {
+                $('[data-toggle="tooltip"]').tooltip()
+            })
+            
+        });
+        ZOHO.embeddedApp.on("PageLoad",function(data)
+        {
+            var entityId = data.EntityId;
+            var leadowner;
+            var phonenumber2; 
+            var phonenumber3;
+            var lead_ownerID;
+            var User_name; 
+            var owner_phoneno;
+            var owner_phoneno1;
+
+            ZOHO.CRM.API.getRecord({Entity:"Leads",RecordID:entityId})
+            .then(function(data){
+                // console.log('datahhhhhh');
+                // console.log(data);
+
+                
+                // lead_ownerID = data.data[0]['Owner'].id;
+                // console.log(leadowner);
+                leadowner = data.data[0].Full_Name;
+                if (leadowner != null) {
+                    $('#lead_name').val(leadowner);
+                }
+
+                phonenumber = data.data[0].Phone;
+                if (phonenumber != null) {
+                    // console.log('phoneeee');
+                    // console.log(phonenumber);
+                    var phone_number = '<option value="+1' + phonenumber +'"selected ="selected"> '+ phonenumber+'</option>'
+                    $("#phone_number_customer").append(phone_number);
+                }
+
+                phonenumber2 = data.data[0].nd_Phone;
+                if (phonenumber2 != null) {
+                    var phone_number2 = '<option value="+1 '+ phonenumber2 +'"> '+ phonenumber2+'</option>'
+                    $("#phone_number_customer").append(phone_number2);
+                }
+                phonenumber3 = data.data[0].rd_Phone;
+                if (phonenumber3 != null) {
+                    var phone_number3 = '<option value="+1 '+ phonenumber3 +'"> '+ phonenumber3 +'</option>'
+                    $("#phone_number_customer").append(phone_number3);
+                }
+                ZOHO.CRM.CONFIG.getCurrentUser().then(function(data){
+
+                    let currentUserID = data.users[0].id;
+                    if(currentUserID != 1075283000021132001 ) {
+                        ZOHO.CRM.API.getUser({ID:currentUserID}).then(function(data){
+                            owner_phoneno1 = data.users[0].phone;
+                            if (owner_phoneno1 != null) {
+                               var owner_phoneno1 = '<option value="' + owner_phoneno1 +'"selected ="selected">'+ owner_phoneno1+'</option>'
+                                $("#leader_owner_phoneno").append(owner_phoneno1);
+                            }
+                        })
+                    }
+
+                });
+                
+            });           
+
+        })
+/*
+* initializing the widget.
+*/
+ZOHO.embeddedApp.init();
+
+//send data to webhook
+
+ $("body").on( 'click', '#send_cancel_btn', function(){
+                ZOHO.CRM.UI.Popup.close()
+                .then(function(data){
+                    // console.log(data);
+                })
+
+            });
+
+
+   $("body").on( 'click', '#phonesms_send', function(){
+         $("input").prop('required',true);
+         var textmessage = $('#form_detail').val();
+
+         var leadowner_name = $('#lead_name').val();
+         // var message = JSON.parse(JSON.stringify(textmessage));
+
+        var phone_user = $('#leader_owner_phoneno').val();
+
+        // var user = JSON.parse(JSON.stringify(phone_user));
+        // console.log("phone_data");
+           // console.log(phone_data);
+
+         var phone_data = $('#phone_number_customer').val();
+        
+
+
+
+                if( leadowner_name != "" && phone_user != "" && textmessage != "" && phone_data != "" ) {
+                var settings = {
+                  "url": "https://flow.zoho.com/661770854/flow/webhook/incoming?zapikey=1001.889dc7f42db3054319c3000ae667f57b.977b44f9933db72912702a50989de67c&isdebug=false",
+                  "method": "POST",
+                  "data": {
+                    "user_phone": phone_user,
+                    "blink":      textmessage,
+                    "lead_phone": phone_data
+                  }
+                };
+
+                $.ajax(settings).done(function (response) {
+                    console.log(response);
+                });
+                
+                $('#loginModal').modal('hide');
+
+
+                $.jAlert({
+                    'content': '<span class="green"><b> Success </b> : SMS Sent!</sapn>',
+                    'theme': 'green',
+                    'backgroundColor': 'white',
+                });
+                setTimeout(() => {
+                    ZOHO.CRM.UI.Popup.close().then(function(data){
+                    // console.log(data);
+                    })
+                },5000)
+            } else {
+                $.jAlert({
+                    'content': '<span class="red"><b> Error </b> : Please enter the message and try again...!</span>',
+                     'theme': 'red',
+                     'backgroundColor': 'white',
+                });
+            }
+            
+     });
+
+</script>
+
+
+</div>
+</body>
+</html>

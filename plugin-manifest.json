@@ -1,0 +1,6 @@
+{
+  "service": "CRM",
+  "whiteListedDomains": [
+      "https://flow.zoho.com"
+  ]
+}
